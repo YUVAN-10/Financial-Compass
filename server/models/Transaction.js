@@ -31,6 +31,13 @@ const TransactionSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  billPath: {
+    type: String,
+  },
+  recurringTransaction: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'RecurringTransaction',
+  },
   createdAt: {
     type: Date,
     default: Date.now

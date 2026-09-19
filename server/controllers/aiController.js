@@ -7,7 +7,7 @@ const Category = require('../models/Category');
 // Note: User needs to set GEMINI_API_KEY in .env
 // Initialize Gemini
 // Note: User needs to set GEMINI_API_KEY in .env
-const apiKey = 'AIzaSyBxLxglzlGFjB0__Kx0bcoKKX71_PQ27Os';
+const apiKey = process.env.GEMINI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 exports.chat = async (req, res) => {
@@ -32,9 +32,19 @@ exports.chat = async (req, res) => {
             .sort({ date: -1 })
             .limit(20);
 
-        // Calculate simple stats for context
+        // Get current year date range to match default Reports page view
+        const currentYear = new Date().getFullYear();
+        const startOfYear = new Date(currentYear, 0, 1);
+        const endOfYear = new Date(currentYear, 11, 31, 23, 59, 59, 999);
+
+        // Calculate stats for current year
         const stats = await Transaction.aggregate([
-            { $match: { user: new mongoose.Types.ObjectId(userId) } },
+            { 
+                $match: { 
+                    user: new mongoose.Types.ObjectId(userId),
+                    date: { $gte: startOfYear, $lte: endOfYear }
+                } 
+            },
             {
                 $group: {
                     _id: null,
@@ -47,17 +57,51 @@ exports.chat = async (req, res) => {
         const currentStats = stats.length > 0 ? stats[0] : { totalIncome: 0, totalExpense: 0 };
         const balance = currentStats.totalIncome - currentStats.totalExpense;
 
-        // 2. Construct System Prompt
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Calculate dynamic health score matching front-end: (Income - Expenses) / Income * 100
+        const totalIncome = currentStats.totalIncome;
+        const totalExpense = currentStats.totalExpense;
+        const healthScore = totalIncome > 0 ? Math.max(0, Math.min(100, Math.round(((totalIncome - totalExpense) / totalIncome) * 100))) : 0;
+
+        // Fetch category breakdown for current year
+        const categoryStats = await Transaction.aggregate([
+            { 
+                $match: { 
+                    user: new mongoose.Types.ObjectId(userId),
+                    date: { $gte: startOfYear, $lte: endOfYear }
+                } 
+            },
+            {
+                $lookup: {
+                    from: 'categories',
+                    localField: 'category',
+                    foreignField: '_id',
+                    as: 'categoryInfo'
+                }
+            },
+            { $unwind: { path: '$categoryInfo', preserveNullAndEmptyArrays: true } },
+            {
+                $group: {
+                    _id: { $ifNull: ['$categoryInfo.name', 'Uncategorized'] },
+                    total: { $sum: '$amount' },
+                    type: { $first: '$type' }
+                }
+            }
+        ]);
+        const categoryBreakdown = categoryStats.map(c => `- ${c._id} (${c.type}): ₹${c.total}`).join('\n');
+
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         const prompt = `
       You are a smart financial assistant for a personal expense tracker app.
       
-      Current User Context:
+      Current User Context (For the current year ${currentYear}):
       - Valid Categories: ${categoryNames}
-      - Current Balance: ₹${balance}
-      - Total Income: ₹${currentStats.totalIncome}
-      - Total Expenses: ₹${currentStats.totalExpense}
+      - Current Balance (Current Year): ₹${balance}
+      - Total Income (Current Year): ₹${totalIncome}
+      - Total Expenses (Current Year): ₹${totalExpense}
+      - Financial Health Score (Current Year): ${healthScore}%
+      - Category Breakdown (Current Year):
+${categoryBreakdown || 'No data recorded yet.'}
       - Recent Transactions: ${JSON.stringify(transactions.map(t => ({
             date: t.date.toISOString().split('T')[0],
             title: t.title,
@@ -72,8 +116,24 @@ exports.chat = async (req, res) => {
       Instructions:
       1. Analyze the user's message.
       2. If the user wants to ADD/CREATE a transaction (e.g., "Spent 500 on food", "Add income 20000"), extract the details and return a JSON object with "action": "create". Infer the specific category from the user's input matching the valid categories list if possible, otherwise use 'Other'.
-      3. If the user is asking a QUESTION about their finances (e.g., "How much did I spend on food?", "What is my balance?"), answer it based on the provided context and return "action": "none".
-      4. Always format amounts in Indian Rupees (₹).
+      3. If the user is asking a QUESTION about their finances (e.g., "How much did I spend on food?", "What is my balance?"), or asking to see a REPORT, SUMMARY, or BUDGET HEALTH SCORE, answer it based on the provided context and return "action": "none".
+      4. If the user asks for a financial health score, budget health score, or rating, explicitly state that their score for ${currentYear} is ${healthScore}%. You MUST also include the category-wise spending breakdown in your response so they see their particular spending per category, and explain how this spending affected their health score. Map the score to the following ratings:
+         - 75% or above: "Excellent budget state"
+         - 50% to 74%: "Healthy budget state"
+         - 30% to 49%: "Stable budget state"
+         - Below 30%: "Needs attention / high expense rate"
+         Offer constructive, brief tips to help them improve or maintain their score.
+      5. If the user asks for a report, summary, or details of their transactions, always format the response beautifully with clear sections, bullet points, and newlines. You MUST include a "Category Spending Breakdown" displaying exact figures for each category. Example:
+         **Financial Summary Report (${currentYear})**
+         - Total Income: ₹X
+         - Total Expenses: ₹Y
+         - Net Balance: ₹Z
+         - Health Score: X% (Rating)
+         
+         **Spending by Category:**
+         - Food (expense): ₹A
+         - Travel (expense): ₹B
+      6. Always format amounts in Indian Rupees (₹).
       
       Output Format (JSON ONLY):
       
@@ -90,10 +150,10 @@ exports.chat = async (req, res) => {
         "response_text": "I have added..."
       }
 
-      Option 2 (No Action - Answer Question):
+      Option 2 (No Action - Answer Question/Report):
       {
         "action": "none",
-        "response_text": "Your answer here..."
+        "response_text": "Your detailed answer or report here..."
       }
     `;
 
@@ -117,14 +177,22 @@ exports.chat = async (req, res) => {
         // 5. Execute Action if needed
         if (aiResponse.action === 'create' && aiResponse.data) {
             try {
+                // Resolve category name to ObjectId
+                let categoryDoc = categories.find(c => c.name.toLowerCase() === String(aiResponse.data.category).toLowerCase());
+                if (!categoryDoc && categories.length > 0) {
+                    categoryDoc = categories[0]; // Fallback to first available category
+                }
+                if (!categoryDoc) {
+                    return res.json({ success: false, message: "No categories found. Please create a category first." });
+                }
+
                 const newTransaction = await Transaction.create({
                     user: userId,
-                    title: aiResponse.data.title,
+                    description: aiResponse.data.title || 'AI Transaction',
                     amount: aiResponse.data.amount,
-                    type: aiResponse.data.type,
-                    category: aiResponse.data.category,
-                    date: new Date(aiResponse.data.date),
-                    notes: 'Created via AI Assistant'
+                    type: aiResponse.data.type || 'expense',
+                    category: categoryDoc._id,
+                    date: aiResponse.data.date ? new Date(aiResponse.data.date) : new Date(),
                 });
                 // Update the response text to confirm success with ID if needed, but the text from AI is usually good enough.
                 // We return the created transaction so frontend can update.

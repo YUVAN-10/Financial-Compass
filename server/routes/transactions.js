@@ -14,15 +14,18 @@ const {
   getPerformanceSummary,
   createBulkTransactions,
   getTransactionsByDate,
-  scanBill
+  scanBill,
+  downloadTransactionBill
 } = require('../controllers/transactions');
 const { protect } = require('../middleware/auth');
+const { processRecurring } = require('../middleware/recurringMiddleware');
 
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
 // Protect all routes
 router.use(protect);
+router.use(processRecurring);
 
 // Scan bill
 router.post('/scan', upload.single('bill'), scanBill);
@@ -65,6 +68,7 @@ router
   );
 
 router.get('/date/:date', getTransactionsByDate);
+router.get('/:id/bill', downloadTransactionBill);
 
 // Get, update, and delete a transaction
 router

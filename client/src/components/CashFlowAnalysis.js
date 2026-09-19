@@ -50,7 +50,7 @@ const CashFlowAnalysis = ({ data }) => {
         display: true,
         text: 'Cash Flow Analysis',
         font: {
-          size: 16,
+          size: 15,
           weight: '600',
         },
       },

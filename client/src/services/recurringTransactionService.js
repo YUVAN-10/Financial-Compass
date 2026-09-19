@@ -19,3 +19,8 @@ export const deleteRecurringTransaction = async (id) => {
   const response = await api.delete(`/api/recurring-transactions/${id}`);
   return response.data;
 };
+
+export const payRecurringTransaction = async (id) => {
+  const response = await api.post(`/api/recurring-transactions/${id}/pay`);
+  return response.data;
+};

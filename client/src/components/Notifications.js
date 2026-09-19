@@ -7,15 +7,15 @@ import { BellIcon, CheckCircleIcon, CurrencyRupeeIcon } from '@heroicons/react/2
 const getNotificationIcon = (type) => {
   switch (type) {
     case 'monthly_report':
-      return <MonthlyReportIcon className="h-6 w-6 text-emerald-400" />;
+      return <MonthlyReportIcon className="h-6 w-6 text-emerald-600" />;
     case 'weekly_report':
-      return <WeeklyReportIcon className="h-6 w-6 text-teal-400" />;
+      return <WeeklyReportIcon className="h-6 w-6 text-teal-600" />;
     case 'daily_report':
-      return <DailyReportIcon className="h-6 w-6 text-blue-400" />;
+      return <DailyReportIcon className="h-6 w-6 text-blue-600" />;
     case 'new_transaction':
-      return <TransactionIcon className="h-6 w-6 text-yellow-400" />;
+      return <TransactionIcon className="h-6 w-6 text-yellow-600" />;
     default:
-      return <BellIcon className="h-6 w-6 text-gray-400" />;
+      return <BellIcon className="h-6 w-6 text-gray-500" />;
   }
 };
 
@@ -23,11 +23,11 @@ const getNotificationStyles = (type) => {
   switch (type) {
     case 'monthly_report':
     case 'income':
-      return 'border-emerald-500/50 hover:bg-emerald-900/10';
+      return 'border-emerald-100 bg-emerald-50/30 hover:bg-emerald-50';
     case 'expense':
-      return 'border-red-500/50 hover:bg-red-900/10';
+      return 'border-red-100 bg-red-50/30 hover:bg-red-50';
     default:
-      return 'border-gray-700/50 hover:bg-gray-800/50';
+      return 'border-gray-100 hover:bg-gray-50';
   }
 };
 
@@ -92,23 +92,23 @@ const Notifications = () => {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <div className="bg-[#0F172A] min-h-screen text-white p-6">
-      <div className="w-full">
-        <div className="flex justify-between items-center mb-8">
+    <div className="bg-cream min-h-screen p-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">
+            <h1 className="text-3xl font-display font-bold text-primary-900">
               Notifications
             </h1>
-            <p className="text-gray-400 mt-2">
+            <p className="mt-1 text-primary-600">
               Stay updated with your financial activity
             </p>
           </div>
           <button
             onClick={handleMarkAllAsRead}
             disabled={unreadCount === 0}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ${unreadCount > 0
-              ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30 border border-emerald-500/50'
-              : 'bg-gray-800/50 text-gray-500 cursor-not-allowed border border-gray-700/50'
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 font-medium ${unreadCount > 0
+              ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border border-emerald-200'
+              : 'bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200'
               }`}
           >
             <CheckCircleIcon className="h-5 w-5" />
@@ -117,16 +117,17 @@ const Notifications = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
+          <div className="flex flex-col justify-center items-center h-64 bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-500"></div>
+            <p className="mt-4 text-gray-500 font-medium animate-pulse">Loading notifications...</p>
           </div>
         ) : notifications.length === 0 ? (
-          <div className="bg-[#1E293B]/50 rounded-2xl p-12 text-center border border-gray-800">
-            <div className="mx-auto h-24 w-24 bg-[#0F172A] rounded-full flex items-center justify-center mb-6 shadow-inner ring-1 ring-gray-700">
-              <BellIcon className="h-10 w-10 text-gray-600" />
+          <div className="bg-white rounded-2xl p-12 text-center border border-gray-100 shadow-sm">
+            <div className="mx-auto h-24 w-24 bg-primary-50 rounded-full flex items-center justify-center mb-6">
+              <BellIcon className="h-10 w-10 text-primary-300" />
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">No notifications yet</h3>
-            <p className="text-gray-400">
+            <h3 className="text-xl font-bold text-primary-900 mb-2">No notifications yet</h3>
+            <p className="text-gray-500">
               We'll notify you when important financial events occur.
             </p>
           </div>
@@ -137,25 +138,25 @@ const Notifications = () => {
                 key={notification._id}
                 className={`relative group overflow-hidden rounded-2xl border p-5 transition-all duration-300 ${getNotificationStyles(notification.type)
                   } ${notification.read
-                    ? 'bg-[#1E293B]/30 border-gray-800 opacity-75'
-                    : 'bg-[#1E293B] border-gray-700 shadow-lg shadow-black/20'
+                    ? 'bg-gray-50/50 border-gray-100 opacity-75'
+                    : 'bg-white border-gray-200 shadow-sm'
                   }`}
               >
                 {!notification.read && (
-                  <div className="absolute top-4 right-4 h-3 w-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse"></div>
+                  <div className="absolute top-4 right-4 h-3 w-3 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.3)] animate-pulse"></div>
                 )}
 
                 <div className="flex items-start gap-5">
-                  <div className={`flex-shrink-0 p-3 rounded-xl bg-[#0F172A] border border-gray-700/50 ${!notification.read ? 'shadow-md ring-1 ring-emerald-500/20' : ''}`}>
+                  <div className={`flex-shrink-0 p-3 rounded-xl bg-white border border-gray-100 shadow-sm ${!notification.read ? 'ring-1 ring-emerald-500/20' : ''}`}>
                     {getNotificationIcon(notification.type)}
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start">
-                      <h4 className={`text-lg font-semibold truncate pr-8 ${notification.read ? 'text-gray-300' : 'text-white'}`}>
+                      <h4 className={`text-lg font-bold truncate pr-8 ${notification.read ? 'text-gray-500' : 'text-primary-900'}`}>
                         {notification.title}
                       </h4>
-                      <span className="text-xs text-gray-500 whitespace-nowrap mt-1">
+                      <span className="text-xs text-gray-500 font-medium whitespace-nowrap mt-1">
                         {new Date(notification.createdAt).toLocaleDateString('en-IN', {
                           day: 'numeric',
                           month: 'short',
@@ -166,7 +167,7 @@ const Notifications = () => {
                       </span>
                     </div>
 
-                    <p className="mt-1 text-gray-400 leading-relaxed text-sm">
+                    <p className={`mt-1 text-sm leading-relaxed ${notification.read ? 'text-gray-400' : 'text-gray-600'}`}>
                       {/* Replace $ with ₹ just in case the backend didn't do it */}
                       {notification.message.replace(/\$/g, '₹')}
                     </p>
@@ -175,7 +176,7 @@ const Notifications = () => {
                       <div className="mt-4 flex justify-end">
                         <button
                           onClick={() => handleMarkAsRead(notification._id)}
-                          className="text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1"
+                          className="text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-1 uppercase tracking-wider"
                         >
                           Mark as Read
                         </button>

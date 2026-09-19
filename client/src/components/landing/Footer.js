@@ -30,7 +30,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} ExpenseTracker. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Finance Tracker. All rights reserved.</p>
         <div className="legal-links">
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>

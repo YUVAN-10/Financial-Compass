@@ -304,26 +304,42 @@ const Reports = () => {
       {
         label: 'Income',
         data: Array.isArray(monthlyTrend) ? monthlyTrend.map(item => item?.totalIncome || 0) : Array(12).fill(0),
-        borderColor: '#2ECC71',
-        backgroundColor: 'rgba(46, 204, 113, 0.1)',
-        tension: 0.1,
-        borderWidth: 2
+        borderColor: '#03D47C', // Emerald Green (Aramco Accent)
+        backgroundColor: 'rgba(3, 212, 124, 0.1)',
+        tension: 0.3,
+        borderWidth: 2,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#03D47C',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
       },
       {
         label: 'Expenses',
         data: Array.isArray(monthlyTrend) ? monthlyTrend.map(item => item?.totalExpense || 0) : Array(12).fill(0),
-        borderColor: '#EB5757',
-        backgroundColor: 'rgba(235, 87, 87, 0.1)',
-        tension: 0.1,
-        borderWidth: 2
+        borderColor: '#EF4444', // Red-500
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+        tension: 0.3,
+        borderWidth: 2,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#EF4444',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
       },
       {
         label: 'Balance',
         data: Array.isArray(monthlyTrend) ? monthlyTrend.map(item => item?.balance || 0) : Array(12).fill(0),
-        borderColor: '#0B1F3A',
-        backgroundColor: 'rgba(11, 31, 58, 0.1)',
-        tension: 0.1,
-        borderWidth: 2
+        borderColor: '#00301e', // Primary-900 (Aramco Deep Green)
+        backgroundColor: 'rgba(0, 48, 30, 0.05)',
+        tension: 0.3,
+        borderWidth: 2,
+        pointBackgroundColor: '#fff',
+        pointBorderColor: '#00301e',
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderDash: [5, 5]
       }
     ]
   };
@@ -339,10 +355,11 @@ const Reports = () => {
           ? categorySummary.map(category => category.totalAmount || 0)
           : [0],
         backgroundColor: Array.isArray(categorySummary) && categorySummary.length > 0
-          ? categorySummary.map(category => category.color || '#D4AF37')
-          : ['#ECEFF1'],
-        borderWidth: 1,
-        borderColor: '#FFFFFF'
+          ? categorySummary.map(category => category.color || '#03D47C')
+          : ['#F3F4F6'],
+        borderWidth: 2,
+        borderColor: '#FFFFFF',
+        hoverOffset: 4
       }
     ]
   };
@@ -356,28 +373,40 @@ const Reports = () => {
         data: Array.isArray(yearlyComparison.currentYear)
           ? yearlyComparison.currentYear.map(item => item?.totalIncome || 0)
           : Array(12).fill(0),
-        backgroundColor: 'rgba(46, 204, 113, 0.7)'
+        backgroundColor: '#03D47C',
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
       },
       {
         label: `Income ${selectedYear - 1}`,
         data: Array.isArray(yearlyComparison.prevYear)
           ? yearlyComparison.prevYear.map(item => item?.totalIncome || 0)
           : Array(12).fill(0),
-        backgroundColor: 'rgba(46, 204, 113, 0.3)'
+        backgroundColor: 'rgba(3, 212, 124, 0.3)',
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
       },
       {
         label: `Expenses ${selectedYear}`,
         data: Array.isArray(yearlyComparison.currentYear)
           ? yearlyComparison.currentYear.map(item => item?.totalExpense || 0)
           : Array(12).fill(0),
-        backgroundColor: 'rgba(235, 87, 87, 0.7)'
+        backgroundColor: '#EF4444',
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
       },
       {
         label: `Expenses ${selectedYear - 1}`,
         data: Array.isArray(yearlyComparison.prevYear)
           ? yearlyComparison.prevYear.map(item => item?.totalExpense || 0)
           : Array(12).fill(0),
-        backgroundColor: 'rgba(235, 87, 87, 0.3)'
+        backgroundColor: 'rgba(239, 68, 68, 0.3)',
+        borderRadius: 4,
+        barPercentage: 0.6,
+        categoryPercentage: 0.8
       }
     ]
   };
@@ -386,33 +415,44 @@ const Reports = () => {
   const lineChartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: 'index',
+      intersect: false,
+    },
     plugins: {
       legend: {
         position: 'top',
+        align: 'end',
         labels: {
           font: {
-            family: 'Inter, sans-serif'
-          }
+            family: 'Outfit, sans-serif',
+            size: 12,
+            weight: 500
+          },
+          usePointStyle: true,
+          boxWidth: 8,
+          padding: 20,
+          color: '#4B5563'
         }
       },
       title: {
-        display: true,
-        text: `Monthly Financial Trend - ${selectedYear}`,
-        font: {
-          family: 'Inter, sans-serif',
-          size: 16,
-          weight: '600'
-        },
-        color: '#0B1F3A'
+        display: false
       },
       tooltip: {
-        backgroundColor: '#0B1F3A',
+        backgroundColor: '#00301e',
         titleFont: {
-          family: 'Inter, sans-serif'
+          family: 'Outfit, sans-serif',
+          size: 13,
+          weight: 600
         },
         bodyFont: {
-          family: 'Inter, sans-serif'
-        }
+          family: 'Outfit, sans-serif',
+          size: 12
+        },
+        padding: 12,
+        cornerRadius: 8,
+        displayColors: true,
+        boxPadding: 4
       }
     },
     scales: {
@@ -421,16 +461,34 @@ const Reports = () => {
           display: false
         },
         ticks: {
-          color: '#607D8B'
+          color: '#6B7280',
+          font: {
+            family: 'Outfit, sans-serif',
+            size: 11
+          }
+        },
+        border: {
+          display: false
         }
       },
       y: {
         beginAtZero: true,
         grid: {
-          color: '#ECEFF1'
+          color: '#F3F4F6',
+          borderDash: [5, 5]
         },
         ticks: {
-          color: '#607D8B'
+          color: '#6B7280',
+          font: {
+            family: 'Outfit, sans-serif',
+            size: 11
+          },
+          callback: function (value) {
+            return '₹' + value.toLocaleString();
+          }
+        },
+        border: {
+          display: false
         }
       }
     }
@@ -444,32 +502,37 @@ const Reports = () => {
         position: 'right',
         labels: {
           font: {
-            family: 'Inter, sans-serif'
+            family: 'Outfit, sans-serif',
+            size: 12
           },
-          padding: 20
+          padding: 20,
+          usePointStyle: true,
+          color: '#4B5563'
         }
       },
       title: {
-        display: true,
-        text: `Expense Categories - ${monthNames[selectedMonth - 1]} ${selectedYear}`,
-        font: {
-          family: 'Inter, sans-serif',
-          size: 16,
-          weight: '600'
-        },
-        color: '#0B1F3A'
+        display: false
       },
       tooltip: {
-        backgroundColor: '#0B1F3A',
-        titleFont: {
-          family: 'Inter, sans-serif'
-        },
+        backgroundColor: '#00301e',
         bodyFont: {
-          family: 'Inter, sans-serif'
+          family: 'Outfit, sans-serif'
+        },
+        callbacks: {
+          label: function (context) {
+            let label = context.label || '';
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed !== null) {
+              label += '₹' + context.parsed.toLocaleString();
+            }
+            return label;
+          }
         }
       }
     },
-    cutout: '70%'
+    cutout: '75%'
   };
 
   const barChartOptions = {
@@ -478,29 +541,27 @@ const Reports = () => {
     plugins: {
       legend: {
         position: 'top',
+        align: 'end',
         labels: {
           font: {
-            family: 'Inter, sans-serif'
-          }
+            family: 'Outfit, sans-serif',
+            size: 12
+          },
+          usePointStyle: true,
+          boxWidth: 8,
+          color: '#4B5563'
         }
       },
       title: {
-        display: true,
-        text: `Yearly Comparison - ${selectedYear} vs ${selectedYear - 1}`,
-        font: {
-          family: 'Inter, sans-serif',
-          size: 16,
-          weight: '600'
-        },
-        color: '#0B1F3A'
+        display: false
       },
       tooltip: {
-        backgroundColor: '#0B1F3A',
+        backgroundColor: '#00301e',
         titleFont: {
-          family: 'Inter, sans-serif'
+          family: 'Outfit, sans-serif'
         },
         bodyFont: {
-          family: 'Inter, sans-serif'
+          family: 'Outfit, sans-serif'
         }
       }
     },
@@ -510,96 +571,102 @@ const Reports = () => {
           display: false
         },
         ticks: {
-          color: '#607D8B'
+          color: '#6B7280',
+          font: {
+            family: 'Outfit, sans-serif',
+            size: 11
+          }
+        },
+        border: {
+          display: false
         }
       },
       y: {
         beginAtZero: true,
         grid: {
-          color: '#ECEFF1'
+          color: '#F3F4F6',
+          borderDash: [5, 5]
         },
         ticks: {
-          color: '#607D8B'
+          color: '#6B7280',
+          font: {
+            family: 'Outfit, sans-serif',
+            size: 11
+          },
+          callback: function (value) {
+            return '₹' + value.toLocaleString();
+          }
+        },
+        border: {
+          display: false
         }
       }
     }
   };
 
   return (
-    <div className="bg-[#ECEFF1] min-h-screen p-6">
+    <div className="bg-cream min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-[#0B1F3A]">Financial Analytics</h1>
-            <p className="mt-2 text-[#0B1F3A]/80">
+            <h1 className="text-3xl font-display font-bold text-primary-900">Financial Analytics</h1>
+            <p className="mt-1 text-primary-600">
               Comprehensive financial reports and visualizations
             </p>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             <button
               onClick={downloadCSV}
-              className="bg-[#D4AF37] text-[#0B1F3A] font-bold py-2 px-4 rounded-lg shadow-md hover:bg-[#CFD8DC] transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-gray-200 rounded-xl shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
             >
-              Download CSV
+              <span className="mr-2">📄</span> CSV
             </button>
             <button
               onClick={downloadExcel}
-              className="bg-[#D4AF37] text-[#0B1F3A] font-bold py-2 px-4 rounded-lg shadow-md hover:bg-[#CFD8DC] transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-accent-500 hover:bg-accent-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-500 transition-colors"
             >
-              Download Excel
+              <span className="mr-2">📊</span> Excel
             </button>
           </div>
         </div>
 
         {/* Report Type Tabs */}
-        <div className="bg-white rounded-xl shadow border border-[#CFD8DC] overflow-hidden mb-6">
-          <div className="flex flex-wrap">
-            <button
-              onClick={() => setActiveTab('monthly')}
-              className={`flex-1 py-4 px-6 text-center font-medium text-sm ${activeTab === 'monthly' ? 'text-[#0B1F3A] border-b-2 border-[#D4AF37]' : 'text-[#607D8B] hover:text-[#0B1F3A]'}`}
-            >
-              Monthly Trends
-            </button>
-            <button
-              onClick={() => setActiveTab('daily')}
-              className={`flex-1 py-4 px-6 text-center font-medium text-sm ${activeTab === 'daily' ? 'text-[#0B1F3A] border-b-2 border-[#D4AF37]' : 'text-[#607D8B] hover:text-[#0B1F3A]'}`}
-            >
-              Day by Day
-            </button>
-            <button
-              onClick={() => setActiveTab('category')}
-              className={`flex-1 py-4 px-6 text-center font-medium text-sm ${activeTab === 'category' ? 'text-[#0B1F3A] border-b-2 border-[#D4AF37]' : 'text-[#607D8B] hover:text-[#0B1F3A]'}`}
-            >
-              Category Breakdown
-            </button>
-            <button
-              onClick={() => setActiveTab('yearly')}
-              className={`flex-1 py-4 px-6 text-center font-medium text-sm ${activeTab === 'yearly' ? 'text-[#0B1F3A] border-b-2 border-[#D4AF37]' : 'text-[#607D8B] hover:text-[#0B1F3A]'}`}
-            >
-              Yearly Comparison
-            </button>
-            <button
-              onClick={() => setActiveTab('visualization')}
-              className={`flex-1 py-4 px-6 text-center font-medium text-sm ${activeTab === 'visualization' ? 'text-[#0B1F3A] border-b-2 border-[#D4AF37]' : 'text-[#607D8B] hover:text-[#0B1F3A]'}`}
-            >
-              Data Visualization
-            </button>
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6 p-1">
+          <div className="flex flex-wrap gap-1 p-1 bg-gray-50/50 rounded-xl">
+            {[
+              { id: 'monthly', label: 'Monthly Trends' },
+              { id: 'daily', label: 'Day by Day' },
+              { id: 'category', label: 'Category Breakdown' },
+              { id: 'yearly', label: 'Yearly Comparison' },
+              { id: 'visualization', label: 'Data Visualization' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 py-2.5 px-4 text-center font-bold text-sm rounded-lg transition-all ${activeTab === tab.id
+                  ? 'bg-white text-primary-900 shadow-sm ring-1 ring-black/5'
+                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100/50'
+                  }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-xl shadow border border-[#CFD8DC] p-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
           <div className="flex flex-wrap items-center gap-6">
-            <div className="flex-1 min-w-[200px]">
-              <label htmlFor="year" className="block text-sm font-medium text-[#0B1F3A] mb-2">
+            <div className="min-w-[200px]">
+              <label htmlFor="year" className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
                 Fiscal Year
               </label>
               <select
                 id="year"
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                className="block w-full px-4 py-2 border border-[#CFD8DC] rounded-lg shadow-sm focus:outline-none focus:ring-[#D4AF37] focus:border-[#D4AF37] sm:text-sm"
+                className="block w-full px-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent text-sm font-medium bg-gray-50 hover:bg-white transition-colors"
               >
                 {years.map(year => (
                   <option key={year} value={year}>{year}</option>
@@ -608,15 +675,33 @@ const Reports = () => {
             </div>
 
             {activeTab === 'category' && (
-              <div className="flex-1 min-w-[200px]">
-                <label htmlFor="month" className="block text-sm font-medium text-[#0B1F3A] mb-2">
+              <div className="min-w-[200px]">
+                <label htmlFor="month" className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
                   Period
                 </label>
                 <select
                   id="month"
                   value={selectedMonth}
                   onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
-                  className="block w-full px-4 py-2 border border-[#CFD8DC] rounded-lg shadow-sm focus:outline-none focus:ring-[#D4AF37] focus:border-[#D4AF37] sm:text-sm"
+                  className="block w-full px-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent text-sm font-medium bg-gray-50 hover:bg-white transition-colors"
+                >
+                  {monthNames.map((month, index) => (
+                    <option key={index} value={index + 1}>{month}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {activeTab === 'daily' && (
+              <div className="min-w-[200px]">
+                <label htmlFor="month-daily" className="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">
+                  Select Month
+                </label>
+                <select
+                  id="month-daily"
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(parseInt(e.target.value))}
+                  className="block w-full px-4 py-2.5 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent text-sm font-medium bg-gray-50 hover:bg-white transition-colors"
                 >
                   {monthNames.map((month, index) => (
                     <option key={index} value={index + 1}>{month}</option>
@@ -629,15 +714,15 @@ const Reports = () => {
 
         {/* Error State */}
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-xl">
             <div className="flex">
               <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
               </div>
               <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
+                <p className="text-sm font-medium text-red-800">{error}</p>
               </div>
             </div>
           </div>
@@ -645,49 +730,54 @@ const Reports = () => {
 
         {/* Loading State */}
         {loading ? (
-          <div className="flex justify-center items-center h-64 bg-white rounded-xl shadow border border-[#CFD8DC]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#D4AF37]"></div>
+          <div className="flex flex-col justify-center items-center h-96 bg-white rounded-2xl shadow-sm border border-gray-100">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-accent-500"></div>
+            <p className="mt-4 text-gray-500 font-medium animate-pulse">Analyzing financial data...</p>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow border border-[#CFD8DC] overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden min-h-[500px]">
             {activeTab === 'visualization' && <DataVisualization monthlyTrend={monthlyTrend} />}
+
             {/* Monthly Trend Chart */}
             {activeTab === 'monthly' && (
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-[#0B1F3A] mb-6">Monthly Financial Performance</h2>
-                <div className="h-[400px] mb-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-display font-bold text-primary-900">Monthly Performance</h2>
+                  <div className="text-sm text-gray-500">Year: <span className="font-bold text-primary-900">{selectedYear}</span></div>
+                </div>
+                <div className="h-[400px] mb-8 w-full">
                   <Line data={monthlyTrendData} options={lineChartOptions} />
                 </div>
 
                 {/* Summary Table */}
                 <div className="overflow-x-auto">
                   {Array.isArray(monthlyTrend) && monthlyTrend.length > 0 ? (
-                    <table className="min-w-full divide-y divide-[#ECEFF1]">
-                      <thead className="bg-[#F5F7FA]">
-                        <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Month</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Income</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Expenses</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Balance</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Transactions</th>
+                    <table className="min-w-full divide-y divide-gray-100">
+                      <thead>
+                        <tr className="bg-gray-50/50">
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-l-xl">Month</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Income</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Expenses</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Balance</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-r-xl">Transactions</th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-[#ECEFF1]">
+                      <tbody className="bg-white divide-y divide-gray-50">
                         {monthlyTrend.map((item, index) => (
-                          <tr key={index} className="hover:bg-[#ECEFF1]/30">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#0B1F3A]">
+                          <tr key={index} className="hover:bg-gray-50/80 transition-colors">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary-900">
                               {monthNames[(item?.month || index + 1) - 1]}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2ECC71]">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-emerald-600">
                               ₹{(item?.totalIncome || 0).toFixed(2)}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-[#EB5757]">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-500">
                               ₹{(item?.totalExpense || 0).toFixed(2)}
                             </td>
-                            <td className={`px-6 py-4 whitespace-nowrap text-sm ${(item?.balance || 0) >= 0 ? 'text-[#2ECC71]' : 'text-[#EB5757]'}`}>
+                            <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold ${(item?.balance || 0) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                               ₹{(item?.balance || 0).toFixed(2)}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-[#607D8B]">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {item?.transactionCount || 0}
                             </td>
                           </tr>
@@ -695,21 +785,28 @@ const Reports = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <div className="text-center py-12 text-[#607D8B]">
-                      No financial data available for {selectedYear}.
+                    <div className="text-center py-16">
+                      <div className="mx-auto h-12 w-12 text-gray-300 mb-3">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-lg font-medium text-gray-900">No Data Available</h3>
+                      <p className="text-gray-500">No financial records found for {selectedYear}.</p>
                     </div>
                   )}
                 </div>
               </div>
             )}
 
-
-
             {/* Daily Trend Chart */}
             {activeTab === 'daily' && (
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-[#0B1F3A] mb-6">Daily Financial Performance - {monthNames[selectedMonth - 1]} {selectedYear}</h2>
-                <div className="h-[400px] mb-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-xl font-display font-bold text-primary-900">Daily Performance</h2>
+                  <div className="text-sm text-gray-500">{monthNames[selectedMonth - 1]} <span className="font-bold text-primary-900">{selectedYear}</span></div>
+                </div>
+                <div className="h-[400px] mb-8 w-full">
                   <Line
                     data={{
                       labels: dailyTrend.map(item => item.day),
@@ -717,18 +814,22 @@ const Reports = () => {
                         {
                           label: 'Income',
                           data: dailyTrend.map(item => item.totalIncome),
-                          borderColor: '#2ECC71',
-                          backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                          borderColor: '#03D47C',
+                          backgroundColor: 'rgba(3, 212, 124, 0.1)',
                           tension: 0.3,
-                          borderWidth: 2
+                          borderWidth: 2,
+                          pointBackgroundColor: '#fff',
+                          pointBorderColor: '#03D47C'
                         },
                         {
                           label: 'Expenses',
                           data: dailyTrend.map(item => item.totalExpense),
-                          borderColor: '#EB5757',
-                          backgroundColor: 'rgba(235, 87, 87, 0.1)',
+                          borderColor: '#EF4444',
+                          backgroundColor: 'rgba(239, 68, 68, 0.1)',
                           tension: 0.3,
-                          borderWidth: 2
+                          borderWidth: 2,
+                          pointBackgroundColor: '#fff',
+                          pointBorderColor: '#EF4444'
                         },
                       ]
                     }}
@@ -737,8 +838,7 @@ const Reports = () => {
                       plugins: {
                         ...lineChartOptions.plugins,
                         title: {
-                          ...lineChartOptions.plugins.title,
-                          text: `Daily Trend - ${monthNames[selectedMonth - 1]} ${selectedYear}`
+                          display: false
                         }
                       }
                     }}
@@ -746,34 +846,34 @@ const Reports = () => {
                 </div>
 
                 {/* Daily Summary Table */}
-                <div className="overflow-x-auto max-h-[500px]">
+                <div className="overflow-x-auto max-h-[500px] scrollbar-thin scrollbar-thumb-gray-200">
                   {Array.isArray(dailyTrend) && dailyTrend.length > 0 ? (
-                    <table className="min-w-full divide-y divide-[#ECEFF1]">
-                      <thead className="bg-[#F5F7FA] sticky top-0">
+                    <table className="min-w-full divide-y divide-gray-100">
+                      <thead className="bg-gray-50/50 sticky top-0 z-10">
                         <tr>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Date</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Income</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Expenses</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Balance</th>
-                          <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-[#607D8B] uppercase tracking-wider">Transactions</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-l-xl">Date</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Income</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Expenses</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Balance</th>
+                          <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider rounded-r-xl">Transactions</th>
                         </tr>
                       </thead>
-                      <tbody className="bg-white divide-y divide-[#ECEFF1]">
+                      <tbody className="bg-white divide-y divide-gray-50">
                         {dailyTrend.map((item, index) => (
-                          <tr key={index} className="hover:bg-[#ECEFF1]/30">
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#0B1F3A]">
+                          <tr key={index} className="hover:bg-gray-50/80 transition-colors">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-primary-900">
                               {item.date}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-[#2ECC71]">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-emerald-600">
                               ₹{(item?.totalIncome || 0).toFixed(2)}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-[#EB5757]">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-500">
                               ₹{(item?.totalExpense || 0).toFixed(2)}
                             </td>
-                            <td className={`px-6 py-4 whitespace-nowrap text-sm ${(item?.balance || 0) >= 0 ? 'text-[#2ECC71]' : 'text-[#EB5757]'}`}>
+                            <td className={`px-6 py-4 whitespace-nowrap text-sm font-bold ${(item?.balance || 0) >= 0 ? 'text-emerald-600' : 'text-red-500'}`}>
                               ₹{(item?.balance || 0).toFixed(2)}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-[#607D8B]">
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {item?.transactionCount || 0}
                             </td>
                           </tr>
@@ -781,8 +881,9 @@ const Reports = () => {
                       </tbody>
                     </table>
                   ) : (
-                    <div className="text-center py-12 text-[#607D8B]">
-                      No daily data available for {monthNames[selectedMonth - 1]} {selectedYear}.
+                    <div className="text-center py-16">
+                      <h3 className="text-lg font-medium text-gray-900">No Daily Data</h3>
+                      <p className="text-gray-500">No transactions recorded for {monthNames[selectedMonth - 1]} {selectedYear}.</p>
                     </div>
                   )}
                 </div>
@@ -792,12 +893,18 @@ const Reports = () => {
             {/* Category Breakdown Chart */}
             {activeTab === 'category' && (
               <div className="p-6">
-                <h2 className="text-xl font-semibold text-[#0B1F3A] mb-6">Expense Allocation</h2>
+                <h2 className="text-xl font-display font-bold text-primary-900 mb-6">Expense Allocation</h2>
 
                 {categorySummary.length > 0 ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="h-[400px]">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div className="h-[350px] relative">
                       <Doughnut data={categorySummaryData} options={pieChartOptions} />
+                      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                        <span className="text-xs text-gray-400 font-bold uppercase tracking-widest">Total</span>
+                        <span className="text-2xl font-bold text-primary-900">
+                          ₹{categorySummary.reduce((sum, item) => sum + item.totalAmount, 0).toLocaleString()}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="overflow-y-auto max-h-[400px]">
@@ -901,7 +1008,7 @@ const Reports = () => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };
 

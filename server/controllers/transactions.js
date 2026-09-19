@@ -6,6 +6,8 @@ const Category = require('../models/Category');
 const sendEmail = require('../utils/email');
 const fs = require('fs');
 
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+
 // @desc    Scan a bill and extract details
 // @route   POST /api/transactions/scan
 // @access  Private
@@ -19,43 +21,48 @@ exports.scanBill = async (req, res) => {
 
     console.log('Uploaded file details:', req.file);
 
-    // OCR.space API implementation
-    const form = new FormData();
-    form.append('language', 'eng');
-    form.append('isOverlayRequired', 'false');
-    form.append('file', fs.createReadStream(req.file.path));
-    form.append('apikey', process.env.OCR_SPACE_API_KEY);
-    form.append('filetype', req.file.mimetype.split('/')[1].toUpperCase());
+    // Free Gemini Vision API implementation
+    console.log('Making Gemini Vision API call.');
+    let parsedText = '';
+    try {
+      const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+      const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
-    // Add these for better table/receipt processing if supported by your plan, otherwise standard is fine
-    form.append('detectOrientation', 'true');
-    form.append('scale', 'true');
-    form.append('OCREngine', '2'); // Use OCR Engine 2 for better number recognition
+      // Convert image to Base64
+      const imageBuffer = fs.readFileSync(req.file.path);
+      const base64Data = imageBuffer.toString('base64');
 
-    console.log('Making OCR.space API call.');
-    const ocrResponse = await axios.post('https://api.ocr.space/parse/image', form, {
-      headers: form.getHeaders(),
-    }).catch(err => {
-      console.error('Error in OCR.space API call:', err);
-      return null;
-    });
-    console.log('OCR.space API call finished.');
+      const imagePart = {
+        inlineData: {
+          data: base64Data,
+          mimeType: req.file.mimetype,
+        },
+      };
+
+      const prompt = "Please extract all text from this receipt. Just return the raw recognized text.";
+
+      const result = await model.generateContent([prompt, imagePart]);
+      const response = await result.response;
+      parsedText = response.text();
+    } catch (err) {
+      console.error('Error in Gemini API call:', err);
+      // Clean up uploaded file
+      fs.unlink(req.file.path, (e) => {
+        if (e) console.error('Error deleting uploaded file:', e);
+      });
+      return res.status(500).json({ success: false, error: `Gemini API Error: ${err.message}` });
+    }
+    console.log('Gemini API call finished.');
 
     // Clean up uploaded file
     fs.unlink(req.file.path, (err) => {
       if (err) console.error('Error deleting uploaded file:', err);
     });
 
-    if (!ocrResponse || !ocrResponse.data || ocrResponse.data.IsErroredOnProcessing) {
-      console.error('OCR API Error:', ocrResponse?.data?.ErrorMessage);
-      return res.status(400).json({ success: false, error: 'Failed to process image. Please try a clearer image.' });
-    }
-
-    if (!ocrResponse.data.ParsedResults || ocrResponse.data.ParsedResults.length === 0) {
+    if (!parsedText) {
       return res.status(400).json({ success: false, error: 'Could not extract text from the document.' });
     }
 
-    const parsedText = ocrResponse.data.ParsedResults[0].ParsedText;
     console.log('Parsed Text (Raw):', parsedText);
 
     // Split text into lines and clean up
@@ -982,5 +989,37 @@ exports.getPerformanceSummary = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, error: 'Server Error' });
+  }
+};
+
+// @desc    Download generated receipt bill file for a transaction
+// @route   GET /api/transactions/:id/bill
+// @access  Private
+exports.downloadTransactionBill = async (req, res) => {
+  try {
+    const transaction = await Transaction.findById(req.params.id);
+
+    if (!transaction) {
+      return res.status(404).json({ success: false, error: 'Transaction not found' });
+    }
+
+    // Verify user owns transaction
+    if (transaction.user.toString() !== req.user.id) {
+      return res.status(401).json({ success: false, error: 'Not authorized to access this transaction' });
+    }
+
+    if (!transaction.billPath) {
+      return res.status(404).json({ success: false, error: 'No bill receipt found for this transaction' });
+    }
+
+    const fs = require('fs');
+    if (!fs.existsSync(transaction.billPath)) {
+      return res.status(404).json({ success: false, error: 'Bill receipt file does not exist on server' });
+    }
+
+    return res.download(transaction.billPath, `receipt-${transaction._id}.txt`);
+  } catch (err) {
+    console.error('Error downloading bill:', err);
+    return res.status(500).json({ success: false, error: 'Server Error downloading bill' });
   }
 };

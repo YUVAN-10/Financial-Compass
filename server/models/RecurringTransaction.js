@@ -45,6 +45,23 @@ const recurringTransactionSchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+  autoPayPermission: {
+    type: Boolean,
+    default: false,
+  },
+  lastNotifiedDueDate: {
+    type: Date,
+  },
+  nextDueDate: {
+    type: Date,
+  },
+  lastProcessedDate: {
+    type: Date,
+  },
   source: {
     type: String,
     default: 'recurring',

@@ -26,6 +26,7 @@ const smsRoutes = require('./routes/sms');
 const investmentRoutes = require('./routes/investmentRoutes');
 const notificationRoutes = require('./routes/notifications');
 const aiRoutes = require('./routes/ai');
+const { initCronJobs } = require('./services/cronJobs');
 // const financialGoalRoutes = require('./routes/financialGoals');
 
 // Initialize express app
@@ -93,12 +94,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Cron job
-// require('./jobs/cron');
+// Define PORT
+const PORT = process.env.PORT || 5001;
 
-const PORT = process.env.PORT || 5003;
+// Initialize background jobs
+initCronJobs();
 
-const server = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

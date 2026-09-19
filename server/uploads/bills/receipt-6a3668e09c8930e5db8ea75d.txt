@@ -1,0 +1,20 @@
+==================================================
+              ARAMCO FINANCE RECEIPT
+==================================================
+Receipt ID       : 6a3668e09c8930e5db8ea75d
+Date             : 20/6/2026
+Reference Type   : Recurring Auto-Pay
+Recurring ID     : 6a3668df9c8930e5db8ea755
+Payment Method   : UPI
+
+--------------------------------------------------
+Description      : Auto Test - Netflix Premium
+Type             : EXPENSE
+Amount Paid      : ₹649.00
+--------------------------------------------------
+Status           : PAID (Success)
+
+==================================================
+Thank you for using Aramco Finance Auto-Pay!
+This is a computer-generated billing receipt.
+==================================================

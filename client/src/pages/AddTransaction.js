@@ -10,7 +10,7 @@ const AddTransaction = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
-  
+
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
@@ -53,17 +53,17 @@ const AddTransaction = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.description.trim()) {
       toast.error('Please enter a description');
       return;
     }
-    
+
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
       toast.error('Please enter a valid amount');
       return;
     }
-    
+
     if (!formData.category) {
       toast.error('Please select a category');
       return;
@@ -113,48 +113,46 @@ const AddTransaction = () => {
   });
 
   return (
-    <div className="min-h-screen bg-[#ECEFF1] py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-cream py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <button
             onClick={handleCancel}
-            className="inline-flex items-center text-sm text-[#0B1F3A] hover:text-[#D4AF37] transition-colors mb-4"
+            className="inline-flex items-center text-sm font-bold text-primary-600 hover:text-accent-600 transition-colors mb-4"
           >
             <ArrowLeftIcon className="h-4 w-4 mr-1" />
             Back to Transactions
           </button>
-          <h1 className="text-3xl font-bold text-[#0B1F3A]">Add New Transaction</h1>
+          <h1 className="text-3xl font-display font-bold text-primary-900">Add New Transaction</h1>
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-[#ECEFF1]">
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100 animate-fade-in-up">
           <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
             {/* Transaction Type */}
             <div>
-              <label className="block text-sm font-medium text-[#0B1F3A] mb-3">
+              <label className="block text-sm font-bold text-gray-700 mb-3">
                 Transaction Type
               </label>
               <div className="grid grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, type: 'income', category: '' }))}
-                  className={`py-3 px-4 text-center rounded-lg border-2 transition-colors ${
-                    formData.type === 'income'
-                      ? 'border-[#2ECC71] bg-[#2ECC71]/10 text-[#0B1F3A]'
-                      : 'border-[#CFD8DC] bg-white text-[#0B1F3A] hover:border-[#D4AF37]'
-                  }`}
+                  className={`py-3 px-4 text-center rounded-xl border-2 transition-all font-bold ${formData.type === 'income'
+                      ? 'border-emerald-500 bg-emerald-50 text-emerald-800 shadow-sm'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-emerald-300 hover:bg-emerald-50'
+                    }`}
                 >
                   Income
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, type: 'expense', category: '' }))}
-                  className={`py-3 px-4 text-center rounded-lg border-2 transition-colors ${
-                    formData.type === 'expense'
-                      ? 'border-[#EF4444] bg-[#EF4444]/10 text-[#0B1F3A]'
-                      : 'border-[#CFD8DC] bg-white text-[#0B1F3A] hover:border-[#D4AF37]'
-                  }`}
+                  className={`py-3 px-4 text-center rounded-xl border-2 transition-all font-bold ${formData.type === 'expense'
+                      ? 'border-red-500 bg-red-50 text-red-800 shadow-sm'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-red-300 hover:bg-red-50'
+                    }`}
                 >
                   Expense
                 </button>
@@ -163,7 +161,7 @@ const AddTransaction = () => {
 
             {/* Description */}
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-[#0B1F3A] mb-1">
+              <label htmlFor="description" className="block text-sm font-bold text-gray-700 mb-1">
                 Description *
               </label>
               <input
@@ -173,19 +171,19 @@ const AddTransaction = () => {
                 value={formData.description}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border border-[#CFD8DC] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-colors"
+                className="mt-1 block w-full border border-gray-200 rounded-xl py-3 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-colors"
                 placeholder="Enter transaction description"
               />
             </div>
 
             {/* Amount */}
             <div>
-              <label htmlFor="amount" className="block text-sm font-medium text-[#0B1F3A] mb-1">
+              <label htmlFor="amount" className="block text-sm font-bold text-gray-700 mb-1">
                 Amount *
               </label>
-              <div className="mt-1 relative rounded-lg shadow-sm">
+              <div className="mt-1 relative rounded-xl shadow-sm">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-[#64748B]">$</span>
+                  <span className="text-gray-500 font-bold">₹</span>
                 </div>
                 <input
                   type="number"
@@ -196,7 +194,7 @@ const AddTransaction = () => {
                   required
                   min="0"
                   step="0.01"
-                  className="block w-full pl-8 pr-12 border border-[#CFD8DC] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-colors"
+                  className="block w-full pl-8 pr-12 border border-gray-200 rounded-xl py-3 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-colors text-lg font-bold text-gray-900"
                   placeholder="0.00"
                 />
               </div>
@@ -204,7 +202,7 @@ const AddTransaction = () => {
 
             {/* Category */}
             <div>
-              <label htmlFor="category" className="block text-sm font-medium text-[#0B1F3A] mb-1">
+              <label htmlFor="category" className="block text-sm font-bold text-gray-700 mb-1">
                 Category *
               </label>
               <select
@@ -213,7 +211,7 @@ const AddTransaction = () => {
                 value={formData.category}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full border border-[#CFD8DC] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-colors"
+                className="mt-1 block w-full border border-gray-200 rounded-xl py-3 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-colors bg-white"
               >
                 <option value="">Select a category</option>
                 {filteredCategories.map((category) => (
@@ -223,7 +221,7 @@ const AddTransaction = () => {
                 ))}
               </select>
               {filteredCategories.length === 0 && (
-                <p className="mt-2 text-sm text-[#64748B]">
+                <p className="mt-2 text-sm text-gray-500">
                   No categories available. Please create a category first.
                 </p>
               )}
@@ -231,21 +229,21 @@ const AddTransaction = () => {
 
             {/* Date */}
             <div>
-              <label className="block text-sm font-medium text-[#0B1F3A] mb-1">
+              <label className="block text-sm font-bold text-gray-700 mb-1">
                 Date *
               </label>
               <input
                 type="date"
                 value={formData.date.toISOString().split('T')[0]}
                 onChange={(e) => handleDateChange(new Date(e.target.value))}
-                className="block w-full border border-[#CFD8DC] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-colors"
+                className="block w-full border border-gray-200 rounded-xl py-3 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-colors"
                 max={new Date().toISOString().split('T')[0]}
               />
             </div>
 
             {/* Notes */}
             <div>
-              <label htmlFor="notes" className="block text-sm font-medium text-[#0B1F3A] mb-1">
+              <label htmlFor="notes" className="block text-sm font-bold text-gray-700 mb-1">
                 Notes (Optional)
               </label>
               <textarea
@@ -254,24 +252,24 @@ const AddTransaction = () => {
                 value={formData.notes}
                 onChange={handleChange}
                 rows={3}
-                className="mt-1 block w-full border border-[#CFD8DC] rounded-lg py-2 px-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37] focus:border-transparent transition-colors"
+                className="mt-1 block w-full border border-gray-200 rounded-xl py-3 px-4 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent transition-colors"
                 placeholder="Add any additional notes..."
               />
             </div>
 
             {/* Submit Buttons */}
-            <div className="flex justify-end space-x-4 pt-6">
+            <div className="flex justify-end space-x-4 pt-6 border-t border-gray-100">
               <button
                 type="button"
                 onClick={handleCancel}
-                className="py-2 px-6 border border-[#CFD8DC] rounded-lg shadow-sm text-sm font-medium text-[#0B1F3A] bg-white hover:bg-[#ECEFF1] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4AF37] transition-colors"
+                className="py-3 px-6 border border-gray-200 rounded-xl shadow-sm text-sm font-bold text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-200 transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={loading}
-                className="py-2 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#0B1F3A] hover:bg-[#0B1F3A]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D4AF37] transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                className="py-3 px-8 border border-transparent rounded-xl shadow-md text-sm font-bold text-white bg-primary-900 hover:bg-primary-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-900 transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {loading ? (
                   <span className="flex items-center justify-center">

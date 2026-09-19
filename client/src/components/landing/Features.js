@@ -7,7 +7,7 @@ const Features = () => {
         <h2 className="section-subtitle">ENTERPRISE-GRADE TOOLS</h2>
         <h3 className="section-title">Institutional Quality Financial Management</h3>
         <p className="section-description">
-          ExpenseTracker provides the sophisticated tools professionals need with 
+          Finance Tracker provides the sophisticated tools professionals need with
           the simplicity personal finance demands.
         </p>
       </div>
@@ -20,14 +20,14 @@ const Features = () => {
           </div>
           <h4>Comprehensive Tracking</h4>
           <p>
-            Monitor all accounts in one place with real-time synchronization and 
+            Monitor all accounts in one place with real-time synchronization and
             detailed transaction categorization.
           </p>
           <div className="feature-link">
             <a href="/features">Learn more</a>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3.33325 8H12.6666" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 3.33334L12.6667 8.00001L8 12.6667" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3.33325 8H12.6666" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M8 3.33334L12.6667 8.00001L8 12.6667" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
@@ -39,14 +39,14 @@ const Features = () => {
           </div>
           <h4>Advanced Budgeting</h4>
           <p>
-            Set targets by category with rollover balances and predictive 
+            Set targets by category with rollover balances and predictive
             forecasting based on your spending patterns.
           </p>
           <div className="feature-link">
             <a href="/features">Learn more</a>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3.33325 8H12.6666" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 3.33334L12.6667 8.00001L8 12.6667" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3.33325 8H12.6666" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M8 3.33334L12.6667 8.00001L8 12.6667" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>
@@ -58,14 +58,14 @@ const Features = () => {
           </div>
           <h4>Portfolio Analytics</h4>
           <p>
-            Visualize your financial health with institutional-grade dashboards 
+            Visualize your financial health with institutional-grade dashboards
             and customizable reporting.
           </p>
           <div className="feature-link">
             <a href="/features">Learn more</a>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3.33325 8H12.6666" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M8 3.33334L12.6667 8.00001L8 12.6667" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3.33325 8H12.6666" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M8 3.33334L12.6667 8.00001L8 12.6667" stroke="#2ECC71" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
         </div>

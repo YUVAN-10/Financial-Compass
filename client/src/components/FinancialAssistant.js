@@ -76,7 +76,7 @@ const FinancialAssistant = () => {
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 group"
+                    className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-emerald-600 to-emerald-500 text-white p-4 rounded-full shadow-lg hover:shadow-2xl hover:scale-110 transition-all duration-300 group"
                 >
                     <SparklesIcon className="h-6 w-6 animate-pulse" />
                     <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
@@ -90,7 +90,7 @@ const FinancialAssistant = () => {
                 <div className="fixed bottom-6 right-6 z-50 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col h-[500px] animate-slide-up origin-bottom-right">
 
                     {/* Header */}
-                    <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 flex justify-between items-center text-white">
+                    <div className="bg-gradient-to-r from-emerald-700 to-emerald-500 p-4 flex justify-between items-center text-white">
                         <div className="flex items-center gap-2">
                             <SparklesIcon className="h-5 w-5" />
                             <h3 className="font-bold">Financial AI</h3>
@@ -111,9 +111,9 @@ const FinancialAssistant = () => {
                                 className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                             >
                                 <div
-                                    className={`max-w-[80%] p-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                        ? 'bg-indigo-600 text-white rounded-br-none'
-                                        : 'bg-white border border-gray-100 shadow-sm text-gray-700 rounded-bl-none'
+                                    className={`max-w-[80%] p-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'user'
+                                        ? 'bg-emerald-600 text-white rounded-br-none'
+                                        : 'bg-white border border-emerald-100 shadow-sm text-gray-700 rounded-bl-none'
                                         }`}
                                 >
                                     {msg.text}
@@ -122,10 +122,10 @@ const FinancialAssistant = () => {
                         ))}
                         {loading && (
                             <div className="flex justify-start">
-                                <div className="bg-white border border-gray-100 shadow-sm p-3 rounded-2xl rounded-bl-none flex gap-1">
-                                    <div className="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
-                                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce delay-75"></div>
-                                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce delay-150"></div>
+                                <div className="bg-white border border-emerald-100 shadow-sm p-3 rounded-2xl rounded-bl-none flex gap-1">
+                                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
+                                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce delay-75"></div>
+                                    <div className="w-2 h-2 bg-emerald-600 rounded-full animate-bounce delay-150"></div>
                                 </div>
                             </div>
                         )}
@@ -133,19 +133,19 @@ const FinancialAssistant = () => {
                     </div>
 
                     {/* Input Area */}
-                    <form onSubmit={sendMessage} className="p-4 bg-white border-t border-gray-100">
+                    <form onSubmit={sendMessage} className="p-4 bg-white border-t border-emerald-100">
                         <div className="relative">
                             <input
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 placeholder="Add expense or ask a question..."
-                                className="w-full pl-4 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none text-sm transition-all"
+                                className="w-full pl-4 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all"
                             />
                             <button
                                 type="submit"
                                 disabled={loading || !input.trim()}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-indigo-600 hover:text-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed p-1.5 hover:bg-indigo-50 rounded-lg transition-colors"
+                                className="absolute right-2 top-1/2 -translate-y-1/2 text-emerald-600 hover:text-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed p-1.5 hover:bg-emerald-50 rounded-lg transition-colors"
                             >
                                 <PaperAirplaneIcon className="h-5 w-5" />
                             </button>

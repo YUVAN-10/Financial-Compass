@@ -9,11 +9,13 @@ const {
   getBudgetProgress
 } = require('../controllers/budgets');
 const { protect } = require('../middleware/auth');
+const { processRecurring } = require('../middleware/recurringMiddleware');
 
 const router = express.Router();
 
 // Protect all routes
 router.use(protect);
+router.use(processRecurring);
 
 // Get budget progress
 router.get('/progress', getBudgetProgress);

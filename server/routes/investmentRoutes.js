@@ -32,6 +32,52 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
-// PUT / DELETE: add later if needed
+// UPDATE an investment
+router.put('/:id', protect, async (req, res) => {
+  try {
+    let investment = await Investment.findById(req.params.id);
+
+    if (!investment) {
+      return res.status(404).json({ error: 'Investment not found' });
+    }
+
+    // Make sure user owns investment
+    if (investment.user.toString() !== req.user.id) {
+      return res.status(401).json({ error: 'User not authorized' });
+    }
+
+    investment = await Investment.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+
+    res.json(investment);
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// DELETE an investment
+router.delete('/:id', protect, async (req, res) => {
+  try {
+    const investment = await Investment.findById(req.params.id);
+
+    if (!investment) {
+      return res.status(404).json({ error: 'Investment not found' });
+    }
+
+    // Make sure user owns investment
+    if (investment.user.toString() !== req.user.id) {
+      return res.status(401).json({ error: 'User not authorized' });
+    }
+
+    await investment.deleteOne();
+
+    res.json({ message: 'Investment removed' });
+  } catch (err) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
 module.exports = router;
