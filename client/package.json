@@ -10,7 +10,9 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
+    "baseline-browser-mapping": "^2.11.25",
     "buffer": "^6.0.3",
+    "caniuse-lite": "^1.0.30001810",
     "chart.js": "^4.3.0",
     "cross-env": "^10.0.0",
     "crypto-browserify": "^3.12.1",
@@ -46,7 +48,7 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "npm run build:css && react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "build:css": "tailwindcss -i src/index.css -o src/tailwind.css",
     "test": "react-scripts test",
